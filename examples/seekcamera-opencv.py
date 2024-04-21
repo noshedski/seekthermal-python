@@ -17,6 +17,8 @@
 
 from threading import Condition
 
+from detect import find_organism
+
 import cv2
 
 from seekcamera import (
@@ -102,7 +104,7 @@ def on_event(camera, event_type, event_status, renderer):
         # Start imaging and provide a custom callback to be called
         # every time a new frame is received.
         camera.register_frame_available_callback(on_frame, renderer)
-        camera.capture_session_start(SeekCameraFrameFormat.COLOR_ARGB8888)
+        camera.capture_session_start(SeekCameraFrameFormat.GRAYSCALE)
 
     elif event_type == SeekCameraManagerEvent.DISCONNECT:
         # Check that the camera disconnecting is one actually associated with
@@ -140,15 +142,20 @@ def main():
             with renderer.frame_condition:
                 if renderer.frame_condition.wait(150.0 / 1000.0):
                     img = renderer.frame.data
+                    #print(renderer.frame.format)
 
+                    if_contours = find_organism(img)
                     # Resize the rendering window.
                     if renderer.first_frame:
-                        (height, width, _) = img.shape
-                        cv2.resizeWindow(window_name, width * 2, height * 2)
+                        (height, width, test) = img.shape
+                        #print(height)
+                        #print(width)
+                        print(test)
+                        cv2.resizeWindow(window_name, 2 * width , 2 * height )
                         renderer.first_frame = False
 
                     # Render the image to the window.
-                    cv2.imshow(window_name, img)
+                    cv2.imshow(window_name, if_contours)
 
             # Process key events.
             key = cv2.waitKey(1)

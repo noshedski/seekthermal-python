@@ -17,14 +17,11 @@
 
 from threading import Condition
 
-import moviepy.video.io.ImageSequenceClip
 import cv2
 import numpy
 import PIL.Image
-from PIL import Image, ImageFile
 import os
 import glob
-import random
 
 from PIL import Image, ImageFont, ImageDraw
 
@@ -130,35 +127,36 @@ def on_event(camera, event_type, event_status, renderer):
     elif event_type == SeekCameraManagerEvent.READY_TO_PAIR:
         return
 
-def bgra2rgb( bgra ):
+
+def bgra2rgb(bgra):
     row, col, ch = bgra.shape
 
-    assert ch == 4, 'ARGB image has 4 channels.'
+    assert ch == 4, "ARGB image has 4 channels."
 
-    rgb = numpy.zeros( (row, col, 3), dtype='uint8' )
+    rgb = numpy.zeros((row, col, 3), dtype="uint8")
     # convert to rgb expected to generate the jpeg image
-    rgb[:,:,0] = bgra[:,:,2]
-    rgb[:,:,1] = bgra[:,:,1]
-    rgb[:,:,2] = bgra[:,:,0]
+    rgb[:, :, 0] = bgra[:, :, 2]
+    rgb[:, :, 1] = bgra[:, :, 1]
+    rgb[:, :, 2] = bgra[:, :, 0]
 
     return rgb
 
 
-
 def main():
     window_name = "Seek Thermal - Python OpenCV Sample"
-    
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
     fileName = "image"
-    counter  = 100000
-    capture  = False
-    record   = False
+    counter = 100000
+    capture = False
+    record = False
     ts_first = 0
-    ts_last  = 0
+    ts_last = 0
     frame_count = 0
-   
+
     from PIL import Image
     from pathlib import Path
-    for f in glob.glob(fileName + '*.jpg'):
+
+    for f in glob.glob(fileName + "*.jpg"):
         os.remove(f)
 
     print("\nuser controls:")
@@ -173,90 +171,89 @@ def main():
         # Start listening for events.
         renderer = Renderer()
         manager.register_event_callback(on_event, renderer)
-        #record = True
-        count = 0
 
-        command = input("Record on r:")
-        if command == "r":
-            #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
-            renderer.camera.shutter_mode = SeekCameraShutterMode.MANUAL
-            print("\nRecording!")
-            print("Note: shutter is disabled while recording...so keep the videos relatively short")
-            record = True
-            while True:
-                # Wait a maximum of 150ms for each frame to be received.
-                # A condition variable is used to synchronize the access to the renderer;
-                # it will be notified by the user defined frame available callback thread.
-                with renderer.frame_condition:
-                    if renderer.frame_condition.wait(150.0 / 1000.0):
-                        img = renderer.frame.data
+        while True:
+            # Wait a maximum of 150ms for each frame to be received.
+            # A condition variable is used to synchronize the access to the renderer;
+            # it will be notified by the user defined frame available callback thread.
+            with renderer.frame_condition:
+                if renderer.frame_condition.wait(150.0 / 1000.0):
+                    img = renderer.frame.data
 
-                        # Resize the rendering window.
-                        if renderer.first_frame:
-                            (height, width, _) = img.shape
-                            #cv2.resizeWindow(window_name, width * 2, height * 2)
-                            renderer.first_frame = False
+                    # Resize the rendering window.
+                    if renderer.first_frame:
+                        (height, width, _) = img.shape
+                        cv2.resizeWindow(window_name, width * 2, height * 2)
+                        renderer.first_frame = False
 
-                        # Render the image to the window.
-                        #cv2.imshow(window_name, img)
+                    # Render the image to the window.
+                    cv2.imshow(window_name, img)
 
-                        # if capture or recording, convert the frame image
-                        # to RGB and generate the file.
-                        # Currently counter is a big number to allow easy ordering
-                        # of frames when recording.
-                        if capture or record:
-                            rgbimg = bgra2rgb(img)
-                            frame_count += 1
-                            im = Image.fromarray(rgbimg).convert('RGB')
-                            jpgName = Path('.', fileName + str(counter)).with_suffix('.jpg')
-                            im.save(jpgName)
-                            counter += 1
-                            count += 1
-                            capture = False
-                            if record:                            
-                                ts_last = renderer.frame.header.timestamp_utc_ns
-                                if ts_first == 0:
-                                    ts_first = renderer.frame.header.timestamp_utc_ns                        
-                # Process key events.
-                #key = wait_for_input(1)
+                    # if capture or recording, convert the frame image
+                    # to RGB and generate the file.
+                    # Currently counter is a big number to allow easy ordering
+                    # of frames when recording.
+                    if capture or record:
+                        rgbimg = bgra2rgb(img)
+                        frame_count += 1
+                        im = Image.fromarray(rgbimg).convert("RGB")
+                        jpgName = Path(".", fileName + str(counter)).with_suffix(".jpg")
+                        im.save(jpgName)
+                        counter += 1
+                        capture = False
+                        if record:
+                            ts_last = renderer.frame.header.timestamp_utc_ns
+                            if ts_first == 0:
+                                ts_first = renderer.frame.header.timestamp_utc_ns
+            # Process key events.
+            key = cv2.waitKey(1)
+            if key == ord("q"):
+                break
 
-                if count == 300 :
-                       
+            if key == ord("c"):
+                capture = True
+
+            if key == ord("r"):
+                if record == False:
+                    record = True
+                    renderer.camera.shutter_mode = SeekCameraShutterMode.MANUAL
+                    print("\nRecording! Press 'r' to stop recording")
+                    print(
+                        "Note: shutter is disabled while recording...so keep the videos relatively short"
+                    )
+                else:
                     # Stop the recording and squish all the jpeg files together
                     # and generate the .avi file.
                     record = False
                     renderer.camera.shutter_mode = SeekCameraShutterMode.AUTO
-                    
-                    #time_s = (ts_last - ts_first)/1000000000                    
-                    ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+                    time_s = (ts_last - ts_first) / 1000000000
+
                     print("\nRecording stopped and video is in myVideo.avi")
-
                     img_array = []
-                    for filename in glob.glob('image*.jpg'):
-                        #img = cv2.imread(filename)
-                        #height, width, layers = img.shape
-                        #size = (width,height)
-                        img_array.append(filename)
-                        #os.remove(filename)                        
-                    #out = cv2.VideoWriter('myVideo.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_count/time_s, size)
-                    integer = random.randint(1, 100)
-                    clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(img_array, fps=27)
-                    clip.write_videofile(os.getcwd() + "/video" + str(integer) +".mp4")
-                    #frame_count = ts_first = ts_last = 0
-                    
-                    for filename in glob.glob('image*.jpg'):
-                        os.remove(filename)
-                    #for i in range(len(img_array)):
-                        #out.write(img_array[i])
-                    #out.release()
-                    break
+                    for filename in glob.glob("image*.jpg"):
+                        img = cv2.imread(filename)
+                        height, width, layers = img.shape
+                        size = (width, height)
+                        img_array.append(img)
+                    out = cv2.VideoWriter(
+                        "myVideo.avi",
+                        cv2.VideoWriter_fourcc(*"DIVX"),
+                        frame_count / time_s,
+                        size,
+                    )
 
-                # Check if the window has been closed manually.
-                #if not cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE):
-                    # print("test")
-                    #break 
+                    frame_count = ts_first = ts_last = 0
 
-        #cv2.destroyWindow(window_name)
+                    for i in range(len(img_array)):
+                        out.write(img_array[i])
+                    out.release()
+
+            # Check if the window has been closed manually.
+            if not cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE):
+                break
+
+    cv2.destroyWindow(window_name)
 
 
 if __name__ == "__main__":
