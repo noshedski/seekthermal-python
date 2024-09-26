@@ -17,6 +17,7 @@
 
 from threading import Condition
 
+import sys
 import moviepy.video.io.ImageSequenceClip
 import cv2
 import numpy
@@ -145,7 +146,7 @@ def bgra2rgb( bgra ):
 
 
 
-def main():
+def main(time):
     window_name = "Seek Thermal - Python OpenCV Sample"
     
     fileName = "image"
@@ -155,6 +156,7 @@ def main():
     ts_first = 0
     ts_last  = 0
     frame_count = 0
+    frame_cap = time * 27
    
     from PIL import Image
     from pathlib import Path
@@ -220,7 +222,7 @@ def main():
                 # Process key events.
                 #key = wait_for_input(1)
 
-                if count == 300 :
+                if count == frame_cap :
                        
                     # Stop the recording and squish all the jpeg files together
                     # and generate the .avi file.
@@ -260,4 +262,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    seconds = 60
+    if len(sys.argv) > 1:
+        seconds = int(sys.argv[1])
+    main(seconds)
