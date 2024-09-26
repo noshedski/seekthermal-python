@@ -26,6 +26,7 @@ from PIL import Image, ImageFile
 import os
 import glob
 import random
+from pathlib import Path
 
 from PIL import Image, ImageFont, ImageDraw
 
@@ -146,7 +147,7 @@ def bgra2rgb( bgra ):
 
 
 
-def main(time):
+def main(time, merge):
     window_name = "Seek Thermal - Python OpenCV Sample"
     
     fileName = "image"
@@ -231,19 +232,30 @@ def main(time):
                     
                     #time_s = (ts_last - ts_first)/1000000000                    
                     ImageFile.LOAD_TRUNCATED_IMAGES = True
-                    print("\nRecording stopped and video is in myVideo.avi")
-
+                    print("\nRecording stopped!")
+                    integer = random.randint(1, 100)
+                    pathname = os.getcwd() + '\\video' + str(integer) 
                     img_array = []
+                    if merge == False:
+                        os.mkdir(pathname)
                     for filename in glob.glob('image*.jpg'):
                         #img = cv2.imread(filename)
                         #height, width, layers = img.shape
                         #size = (width,height)
+                        if merge == False:
+                            newfilename = pathname + "\\" + filename
+                            #print(newfilename)
+                            Path(os.getcwd() + "\\"+ filename).rename(newfilename)
+
                         img_array.append(filename)
                         #os.remove(filename)                        
                     #out = cv2.VideoWriter('myVideo.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_count/time_s, size)
-                    integer = random.randint(1, 100)
-                    clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(img_array, fps=27)
-                    clip.write_videofile(os.getcwd() + "/video" + str(integer) +".mp4")
+                    print(f"\nMerge was not turned on, so images are dumped in {pathname} to be merged off pi")
+                    if merge == True:
+                        print("Merge activated, merging file to video")
+                        clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(img_array, fps=27)
+                        clip.write_videofile(pathname +".mp4")
+                    
                     #frame_count = ts_first = ts_last = 0
                     
                     for filename in glob.glob('image*.jpg'):
@@ -263,6 +275,14 @@ def main(time):
 
 if __name__ == "__main__":
     seconds = 60
-    if len(sys.argv) > 1:
+    merge = False
+    if len(sys.argv) == 2:
         seconds = int(sys.argv[1])
-    main(seconds)
+    elif len(sys.argv) == 3:
+        if str(sys.argv[2]) == 'm':
+            merge = True
+        else:
+            merge = False
+        seconds = int(sys.argv[1])    
+
+    main(seconds, merge)
