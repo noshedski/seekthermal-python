@@ -1,6 +1,5 @@
 import moviepy.video.io.ImageSequenceClip
 import sys
-import glob
 import os
 import shutil
 
@@ -9,7 +8,7 @@ def main(videoname):
     folder = os.getcwd() + '/videos/' + videoname + '/'
     print(folder)
     img_array = []
-    for filename in glob.glob(folder + 'image' + '*.jpg'):
+    for filename in sorted(os.listdir()):
         print(filename)
         img_array.append(filename)
         
