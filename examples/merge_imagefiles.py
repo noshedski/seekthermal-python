@@ -6,7 +6,7 @@ import shutil
 
 def main(videoname):
 
-    folder = os.getcwd() + '\\videos\\' + videoname + '\\'
+    folder = os.getcwd() + '/videos/' + videoname + '/'
     print(folder)
     img_array = []
     for filename in glob.glob(folder + 'image' + '*.jpg'):
@@ -14,7 +14,7 @@ def main(videoname):
         img_array.append(filename)
         
 
-    destination = os.getcwd() + '\\videos\\' + videoname
+    destination = os.getcwd() + '/videos/' + videoname
     print("Merge activated, merging file to video")
     clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(img_array, fps=27)
     clip.write_videofile(destination +".mp4")    

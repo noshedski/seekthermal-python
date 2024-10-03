@@ -234,7 +234,7 @@ def main(time, merge):
                     ImageFile.LOAD_TRUNCATED_IMAGES = True
                     print("\nRecording stopped!")
                     integer = random.randint(1, 100)
-                    pathname = os.getcwd() + '\\videos\\video' + str(integer) 
+                    pathname = os.getcwd() + '/videos/video' + str(integer) 
                     img_array = []
                     if merge == False:
                         os.mkdir(pathname)
@@ -243,9 +243,9 @@ def main(time, merge):
                         #height, width, layers = img.shape
                         #size = (width,height)
                         if merge == False:
-                            newfilename = pathname + "\\" + filename
+                            newfilename = pathname + "/" + filename
                             #print(newfilename)
-                            Path(os.getcwd() + "\\"+ filename).rename(newfilename)
+                            Path(os.getcwd() + "/"+ filename).rename(newfilename)
 
                         img_array.append(filename)
                         #os.remove(filename)                        
