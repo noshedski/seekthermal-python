@@ -234,7 +234,7 @@ def main(time, merge):
                     ImageFile.LOAD_TRUNCATED_IMAGES = True
                     print("\nRecording stopped!")
                     integer = random.randint(1, 100)
-                    pathname = os.getcwd() + '\\video' + str(integer) 
+                    pathname = os.getcwd() + '\\videos\\video' + str(integer) 
                     img_array = []
                     if merge == False:
                         os.mkdir(pathname)
@@ -250,12 +250,13 @@ def main(time, merge):
                         img_array.append(filename)
                         #os.remove(filename)                        
                     #out = cv2.VideoWriter('myVideo.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_count/time_s, size)
-                    print(f"\nMerge was not turned on, so images are dumped in {pathname} to be merged off pi")
+                    
                     if merge == True:
                         print("Merge activated, merging file to video")
                         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(img_array, fps=27)
                         clip.write_videofile(pathname +".mp4")
-                    
+                    else: 
+                        print(f"\nMerge was not turned on, so images are dumped in {pathname} to be merged off pi")
                     #frame_count = ts_first = ts_last = 0
                     
                     for filename in glob.glob('image*.jpg'):
