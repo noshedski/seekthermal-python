@@ -9,7 +9,7 @@ def main(videoname):
     print(folder)
     img_array = []
     for filename in sorted(os.listdir()):
-        print(filename)
+        #print(filename)
         img_array.append(filename)
         
 

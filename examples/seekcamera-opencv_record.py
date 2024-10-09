@@ -238,7 +238,7 @@ def main(time, merge):
                     img_array = []
                     if merge == False:
                         os.mkdir(pathname)
-                    for filename in glob.glob('image*.jpg'):
+                    for filename in sorted(os.listdir()):
                         #img = cv2.imread(filename)
                         #height, width, layers = img.shape
                         #size = (width,height)
