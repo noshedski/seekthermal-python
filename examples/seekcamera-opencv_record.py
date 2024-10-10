@@ -242,12 +242,14 @@ def main(time, merge):
                         #img = cv2.imread(filename)
                         #height, width, layers = img.shape
                         #size = (width,height)
-                        if merge == False:
-                            newfilename = pathname + "/" + filename
-                            #print(newfilename)
-                            Path(os.getcwd() + "/"+ filename).rename(newfilename)
+                        if filename.endswith('.jpg'):
+                            if merge == False:
+                                newfilename = pathname + "/" + filename
+                                #print(newfilename)
+                                Path(os.getcwd() + "/"+ filename).rename(newfilename)
 
-                        img_array.append(filename)
+                            img_array.append(filename)
+                        
                         #os.remove(filename)                        
                     #out = cv2.VideoWriter('myVideo.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_count/time_s, size)
                     
