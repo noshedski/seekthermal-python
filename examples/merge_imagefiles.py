@@ -9,8 +9,10 @@ def main(videoname):
     print(folder)
     img_array = []
     for filename in sorted(os.listdir(folder)):
-        print(filename)
-        img_array.append(filename)
+        
+        image_file = folder + filename
+        print(image_file)
+        img_array.append(image_file)
         
 
     destination = os.getcwd() + '/videos/' + videoname
