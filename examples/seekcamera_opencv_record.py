@@ -24,6 +24,7 @@ import numpy
 import PIL.Image
 from PIL import Image, ImageFile
 import os
+import time as sleep
 import glob
 import random
 from pathlib import Path
@@ -179,7 +180,13 @@ def main(time, merge):
         #record = True
         count = 0
 
-        command = input("Record on r:")
+        #command = input("Record on r:")
+        command = "r"
+        print("recording command given! Recording will start in 5 seconds!")
+        for i in range(1,6):
+            print(f"{6 - i}...")
+            sleep.sleep(1)
+        print("Recording started!")
         if command == "r":
             #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
             renderer.camera.shutter_mode = SeekCameraShutterMode.MANUAL

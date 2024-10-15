@@ -4,7 +4,7 @@ import time
 from PIL import Image, ImageFont, ImageDraw
 
 def get_quad(arr):
-    print("CONTOUR START")
+    #print("CONTOUR START")
     #print(arr)
     #print("CONTOUR END")
     #print(arr[0][0])
@@ -18,7 +18,7 @@ def get_quad(arr):
     for i in range(len(arr)):
     
         temp = arr[i][0]
-        print(temp)
+        #print(temp)
         if temp[0] < fl:
             fl = temp[0]
         elif temp[0] > fr:
@@ -29,8 +29,8 @@ def get_quad(arr):
         elif temp[1] > fu:
             fu = temp[1]
     
-    print(str(fr))
-    print(str(fl))
+    #print(str(fr))
+    #print(str(fl))
     midx = ((fr - fl) // 2) + fl 
     midy = ((fu - fd) // 2) + fu
     
@@ -51,14 +51,16 @@ def get_quad(arr):
 
 def detect_fromfile():
     #Gets numpy array of pixels from main.py
-    arr = cv2.imread(filename="C:/Users/noahh/Code-and-Programs/seekcamera-python-1.3.0/seekcamera-python/examples/image100000.jpg")
+    image_path = r"C:/Users/noahh/Code-and-Programs/seekthermal-python/examples/video13/image101069.jpg"
+    arr = cv2.imread(filename=image_path)
+
     #Converts to gray scale
     image = cv2.cvtColor(arr, cv2.COLOR_BGR2GRAY)
     #Adds gaussian blur to array
     blurred = cv2.GaussianBlur(image, (5, 5), 0)
 
     #Apply thresholding to identify potential organisms
-    _, thresholded = cv2.threshold(blurred, 125, 255, cv2.THRESH_BINARY)    
+    _, thresholded = cv2.threshold(blurred, 150, 255, cv2.THRESH_BINARY)     
 
     # Find contours in the thresholded image, the contours that are found are potential organisms
     contours, _ = cv2.findContours(thresholded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -69,20 +71,23 @@ def detect_fromfile():
         #Draw contours on the grayscaled image
         #print(len(contours))
         info_array = []
+        index_array = []
         for i in range(0, len(contours)):
 
-            if len(contours[i]) > 15:
+            if len(contours[i]) > 30:
                 test = contours[i]
                 #print(test)
                 temp = get_quad(test)
                 info_array.append(temp)
+                index_array.append(i)
 
             #print(len(contours[i]))
             #print(contours[i])
         
-
-        result = cv2.drawContours(image.copy(), contours, -1, (0, 255, 0), 2)
-        
+        result = image.copy()
+        for index in index_array:
+            cv2.drawContours(result, contours, index, (0, 255, 0), 2)
+        #print(contours)
         #Tell console organism detected
 
         if len(info_array) >= 1:
@@ -90,8 +95,8 @@ def detect_fromfile():
             for i in range(len(info_array)):
                 print(" Organism " + str(i + 1) + ": " + info_array[i][0] + ", coord: " + str(info_array[i][1][0]) + ", " + str(info_array[i][1][1]) + ".") 
 
-        cv2.imshow("frame", image)
-        time.sleep(5)
+        cv2.imshow("frame", result)
+        cv2.waitKey(0)
         #return result
         cv2.destroyAllWindows()
         
