@@ -23,6 +23,10 @@ python examples/merge_images.py $1
 
 echo "Video created"
 
+# Delete images
+echo "Deleting images"
+rm -r examples/frames
+
 # Open video
 echo "Opening video"
 open examples/video/$1.mp4
