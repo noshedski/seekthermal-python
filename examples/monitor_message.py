@@ -1,7 +1,7 @@
 import asyncio
 from mavsdk import System
 import os
-from seekcamera_opencv_record import main
+# from seekcamera_opencv_record import main
 
 """
 Message interface
@@ -31,7 +31,7 @@ async def run():
 
     async for status_message in drone.telemetry.status_text():
         print(f"STATUS_MESSAGE: {status_message.text}")
-        if (status_message.text.includes("C/start-video")):
+        if "C/start-video" in status_message.text:
             print("Start video")
             # Start video recording
             try:
@@ -42,7 +42,7 @@ async def run():
                
                 await drone.action.send_status_text("F/video-started") 
                 try:
-                    main(seconds, False)
+                    # main(seconds, False)
                     asyncio.sleep(seconds)
                 except:
                     await drone.action.send_status_text("F/video-failed")
