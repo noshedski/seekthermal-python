@@ -12,7 +12,7 @@ I/start-video:{seconds}
 Outgoing
 F/video-started
 F/video-stopped
-
+F/video-failed
 """
 
 async def run():
@@ -39,7 +39,17 @@ async def run():
                 seconds = int(command.split("-")[1])
                 print(f"Starting video for {seconds} seconds")
                 # Add your video recording logic here
-
+               
+                await drone.action.send_status_text("F/video-started") 
+                try:
+                    main(seconds, False)
+                    asyncio.sleep(seconds)
+                except:
+                    await drone.action.send_status_text("F/video-failed")
+                    print("Video recording failed")
+                print("Video recording completed successfully")
+                await drone.action.send_status_text("F/video-stopped")
+                
             except (ValueError, IndexError) as e:
                 print(f"Error parsing command: {e}")
             break
