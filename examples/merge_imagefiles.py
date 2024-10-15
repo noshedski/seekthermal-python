@@ -5,12 +5,12 @@ import shutil
 
 def main(videoname):
 
-    folder = os.getcwd() + '/videos/' + videoname + '/'
-    print(folder)
+    pathname = os.getcwd() + '/frames/'
+    print(pathname)
     img_array = []
-    for filename in sorted(os.listdir(folder)):
+    for filename in sorted(os.listdir(pathname)):
         
-        image_file = folder + filename
+        image_file = pathname + filename
         print(image_file)
         img_array.append(image_file)
         
@@ -21,9 +21,9 @@ def main(videoname):
     clip.write_videofile(destination +".mp4")    
     print(f'Image folder merged to {destination}.mp4')
 
-    shutil.rmtree(destination)
+    #shutil.rmtree(destination)
 
 if __name__ == "__main__":
-    folder = sys.argv[1]
+    filename = sys.argv[1]
 
-    main(folder)
+    main(filename)

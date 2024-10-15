@@ -233,11 +233,11 @@ def main(time, merge):
                     #time_s = (ts_last - ts_first)/1000000000                    
                     ImageFile.LOAD_TRUNCATED_IMAGES = True
                     print("\nRecording stopped!")
-                    integer = random.randint(1, 100)
-                    pathname = os.getcwd() + '/videos/video' + str(integer) 
+                    #integer = random.randint(1, 100)
+                    pathname = os.getcwd() + '/frames'
                     img_array = []
-                    if merge == False:
-                        os.mkdir(pathname)
+                    #if merge == False:
+                        #os.mkdir(pathname)
                     for filename in sorted(os.listdir()):
                         #img = cv2.imread(filename)
                         #height, width, layers = img.shape
@@ -248,7 +248,7 @@ def main(time, merge):
                                 #print(newfilename)
                                 Path(os.getcwd() + "/"+ filename).rename(newfilename)
 
-                            img_array.append(filename)
+                            img_array.append(newfilename)
                         
                         #os.remove(filename)                        
                     #out = cv2.VideoWriter('myVideo.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_count/time_s, size)
@@ -261,8 +261,8 @@ def main(time, merge):
                         print(f"\nMerge was not turned on, so images are dumped in {pathname} to be merged off pi")
                     #frame_count = ts_first = ts_last = 0
                     
-                    for filename in glob.glob('image*.jpg'):
-                        os.remove(filename)
+                    #for filename in glob.glob('image*.jpg'):
+                        #os.remove(filename)
                     #for i in range(len(img_array)):
                         #out.write(img_array[i])
                     #out.release()
