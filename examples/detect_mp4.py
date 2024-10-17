@@ -4,7 +4,7 @@ import os
 from detect import find_organism
 # Create a VideoCapture object and read from input file
 
-path = os.getcwd() + "\\videos\\" + 'Test_flight_thermal_2.mp4'
+path = os.getcwd() + "/videos/" + 'Test_flight_thermal_2.mp4'
 #print(path)
 cap = cv2.VideoCapture(path)
 
