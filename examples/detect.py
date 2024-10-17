@@ -73,8 +73,10 @@ def find_organism(arr):
                 test = contours[i]
                 #print(test)
                 temp = get_quad(test)
-                info_array.append(temp)
-                cv2.drawContours(result, contours, i, (0, 255, 0), 2)
+                #print(temp[1][0])
+                if temp[1][0] >= 75 and temp[1][0] <= 280:
+                    info_array.append(temp)
+                    cv2.drawContours(result, contours, i, (0, 255, 0), 2)
 
         if len(info_array) >= 1:
             print("Organism Detected!")
