@@ -1,0 +1,1 @@
+ssh epi "python3 /home/pi/seekthermal-python/examples/seekcamera_opencv_record.py $1"
