@@ -69,7 +69,7 @@ def find_organism(arr):
         info_array = []
         for i in range(0, len(contours)):
 
-            if len(contours[i]) > 30:
+            if len(contours[i]) > 30 and len(contours[i]) < 50:
                 test = contours[i]
                 #print(test)
                 temp = get_quad(test)
