@@ -8,7 +8,7 @@ def main(filename):
     path = os.getcwd() + "/videos/" + filename
     #print(path)
     cap = cv2.VideoCapture(path)
-
+    end = False
     # Check if camera opened successfully
     if (cap.isOpened()== False):
         print("Error opening video file")
@@ -22,12 +22,19 @@ def main(filename):
         # Display the resulting frame
             if_contours = find_organism(frame)
             title = f"Detection of organisms in {path}"
-            cv2.imshow('title', if_contours)
+            cv2.imshow(title, if_contours)
             
         # Press Q on keyboard to exit
-            if cv2.waitKey(25) & 0xFF == ord('q'):
-                break
-
+            if cv2.waitKey(25) & 0xFF == ord('p'):
+                while True:
+                    if cv2.waitKey(25) & 0xFF == ord('p'):
+                        break
+                    if cv2.waitKey(25) & 0xFF == ord('q'):
+                        end = True
+                        break
+                if end == True:
+                    break
+                    
     # Break the loop
         else:
             break

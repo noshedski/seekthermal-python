@@ -54,7 +54,7 @@ def find_organism(arr):
     blurred = cv2.GaussianBlur(image, (5, 5), 0)
     
     #Apply thresholding to identify potential organisms
-    _, thresholded = cv2.threshold(blurred, 150, 255, cv2.THRESH_BINARY)    
+    _, thresholded = cv2.threshold(blurred, 128, 255, cv2.THRESH_BINARY)    
 
     # Find contours in the thresholded image, the contours that are found are potential organisms
     contours, _ = cv2.findContours(thresholded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -69,12 +69,12 @@ def find_organism(arr):
         info_array = []
         for i in range(0, len(contours)):
 
-            if len(contours[i]) > 30 and len(contours[i]) < 50:
+            if len(contours[i]) in range(14, 50):
                 test = contours[i]
                 #print(test)
                 temp = get_quad(test)
                 #print(temp[1][0])
-                if temp[1][0] >= 75 and temp[1][0] <= 280:
+                if temp[1][0] in range(75,281) and temp[1][1] in range(50, 200): # Noise blocker
                     info_array.append(temp)
                     cv2.drawContours(result, contours, i, (0, 255, 0), 2)
 
