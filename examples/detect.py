@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 def get_quad(arr):
     #print("CONTOUR START")
     #print(arr)
@@ -45,9 +46,9 @@ def get_quad(arr):
     return [string, [midx, midy]] 
 
 
-
 #Gets numpy array of pixels from main.py
-def find_organism(arr):
+def find_organism(arr, time_json, nframes):
+
     #Converts to gray scale
     image = cv2.cvtColor(arr, cv2.COLOR_BGR2GRAY)
     #Adds gaussian blur to array
@@ -59,8 +60,29 @@ def find_organism(arr):
     # Find contours in the thresholded image, the contours that are found are potential organisms
     contours, _ = cv2.findContours(thresholded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+    detect = False
+    timeframe = nframes / 27
+    #print(timeframe)
+    for i in range(len(time_json)):
+        if i == 0 :
+            continue
+        timestamp = time_json[i]
+        prev_ts = time_json[i - 1]
+        if timestamp['time'] >= timeframe:
+            if prev_ts['alt'] >= 5:
+                detect = True
+                break
+            else:
+                break
 
-    if contours: #If countours were found
+        if i == (len(time_json) - 1):
+            if timestamp['alt'] >= 5:
+                detect = True
+                break
+            else:
+                break
+    #print(detect)
+    if contours and detect: #If countours were found
         #Draw contours on the grayscaled image
         #print(contours)
         result = image.copy()
@@ -79,7 +101,8 @@ def find_organism(arr):
                     cv2.drawContours(result, contours, i, (0, 255, 0), 2)
 
         if len(info_array) >= 1:
-            print("Organism Detected!")
+
+            #print("Organism Detected!")
             for i in range(len(info_array)):
                 print(" Organism " + str(i + 1) + ": " + info_array[i][0] + ", coord: " + str(info_array[i][1][0]) + ", " + str(info_array[i][1][1]) + ".") 
             return result

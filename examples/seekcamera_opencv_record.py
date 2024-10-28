@@ -187,6 +187,8 @@ def main(time, merge):
             print(f"{6 - i}...")
             sleep.sleep(1)
         print("Recording started!")
+        #rtflnhfgh start alt
+        os.system(f"python altitude.py {time} test")
         if command == "r":
             #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
             renderer.camera.shutter_mode = SeekCameraShutterMode.MANUAL
