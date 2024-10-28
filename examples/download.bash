@@ -34,6 +34,14 @@ ssh epi "rm /home/pi/seekthermal-python/examples/frames/*"
 echo "Deleting images"
 rm frames/*
 
+# Download timestamps
+echo "Downloading timestamps from pi"
+scp epi:/home/pi/seekthermal-python/examples/timestamps/$1.json timestamps/
+
 # Open video
 echo "Opening video"
 open videos/$1.mp4
+
+# Open detect script
+echo "Opening detect script"
+/usr/bin/env python3 detect_mp4.py $1.mp4

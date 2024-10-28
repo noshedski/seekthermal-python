@@ -4,6 +4,7 @@
 # 1: End time in seconds
 # 2: File name
 
+import json
 import sys
 from mavsdk import System
 import asyncio
@@ -11,8 +12,10 @@ import os
 import datetime
 
 start = datetime.datetime.now()
-
+file_name = "default"
 end = 0
+
+timestamps = []
 
 async def run():
     drone = System()
@@ -30,21 +33,21 @@ async def run():
 
     # Get altitude
     async for altitude in drone.telemetry.position():
-        print(f"Altitude: {altitude.relative_altitude_m}")
-        with open("altitude.txt", "a") as f:
-            f.write(f"{datetime.datetime.now() - start} {altitude.relative_altitude_m}\n")
-        if (datetime.datetime.now() - start).seconds > end:
-            break
+        alt = altitude.relative_altitude_m
+        time = datetime.datetime.now() - start
+        if time.total_seconds() > end:
+            exit()
+        print(f"Altitude: {alt} m")
+        timestamps.append({"time": time.total_seconds(), "alt": alt})
+        with open(f"timestamps/{file_name}.json", "a") as f:
+            json.dump(timestamps, f)
     
 
 if __name__ == "__main__":
     # Start the main function
     print("Starting telemetry")
 
-    # Get end time with arg parameter
-    if len(sys.argv) > 1:
-        end = int(sys.argv[1])
-    else:
-        end = 10
+    end = int(sys.argv[1])
+    file_name = sys.argv[2]
 
     asyncio.run(run())
