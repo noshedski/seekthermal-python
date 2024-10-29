@@ -42,7 +42,7 @@ async def run():
             return
         print(f"Altitude: {alt}m | Time: {time}")
         timestamps.append({"time": time, "alt": alt})
-        with open(f"timestamps/{file_name}.json", "a") as f:
+        with open(f"timestamps/{file_name}.json", "w") as f:
             json.dump(timestamps, f)
     
 
