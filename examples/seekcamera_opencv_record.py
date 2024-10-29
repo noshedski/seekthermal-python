@@ -154,6 +154,10 @@ def bgra2rgb( bgra ):
 
 
 async def main(time, fname):
+
+    # Record start time
+    start = time.time()
+
     window_name = "Seek Thermal - Python OpenCV Sample"
     
     fileName = "image"
@@ -185,14 +189,12 @@ async def main(time, fname):
 
         #command = input("Record on r:")
         command = "r"
-        print("recording command given! Recording will start in 5 seconds!")
-        for i in range(1,6):
-            print(f"{6 - i}...")
-            sleep.sleep(1)
         print("Recording started!")
-        #rtflnhfgh start alt
-        print(f"calling altitude to be stored in {fname}")
-        asyncio.create_task(altitude.run(time, fname))
+
+        # Record time elapsed since start
+        elapsed = time.time() - start
+        print(f"Elapsed time: {elapsed}")
+
         if command == "r":
             #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
             renderer.camera.shutter_mode = SeekCameraShutterMode.MANUAL
@@ -299,3 +301,4 @@ if __name__ == "__main__":
         print(filename)    
 
     asyncio.run(main(seconds, filename))
+    asyncio.run(altitude.run(seconds, filename))
