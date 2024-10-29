@@ -295,6 +295,9 @@ async def inner():
     asyncio.ensure_future(altitude.run(seconds, filename))
     asyncio.ensure_future(main(seconds, filename))
 
+    while True:
+        await asyncio.sleep(1)
+
 
 if __name__ == "__main__":
     seconds = 60
