@@ -1,1 +1,1 @@
-ssh epi "cd ~/seekthermal-python/examples; python3 /home/pi/seekthermal-python/examples/seekcamera_opencv_record.py $1"
+ssh epi "cd ~/seekthermal-python/examples; python3 /home/pi/seekthermal-python/examples/seekcamera_opencv_record.py $1 $2"
