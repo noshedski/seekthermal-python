@@ -301,5 +301,5 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
-    asyncio.run(altitude.run(seconds, filename))
-    asyncio.run(main(seconds, filename))
+    asyncio.ensure_future(altitude.run(seconds, filename))
+    asyncio.ensure_future(main(seconds, filename))
