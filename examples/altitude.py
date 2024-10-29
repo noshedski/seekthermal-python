@@ -17,7 +17,7 @@ end = 0
 
 timestamps = []
 
-async def run():
+async def run(end=end, file_name=file_name):
     drone = System()
     print("Initializing system...")
     drone = System(sysid=1)

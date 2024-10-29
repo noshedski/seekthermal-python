@@ -31,6 +31,8 @@ from pathlib import Path
 from PIL import Image
 from pathlib import Path
 import subprocess
+import asyncio
+import altitude
 
 from PIL import Image, ImageFont, ImageDraw
 
@@ -151,7 +153,7 @@ def bgra2rgb( bgra ):
 
 
 
-def main(time, fname):
+async def main(time, fname):
     window_name = "Seek Thermal - Python OpenCV Sample"
     
     fileName = "image"
@@ -190,7 +192,7 @@ def main(time, fname):
         print("Recording started!")
         #rtflnhfgh start alt
         print(f"calling altitude to be stored in {fname}")
-        subprocess.Popen(["python3", "altitude.py", str(time), fname])
+        await asyncio.to_thread(altitude.run, time, fname)
         if command == "r":
             #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
             renderer.camera.shutter_mode = SeekCameraShutterMode.MANUAL
@@ -296,4 +298,4 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
-    main(seconds, filename)
+    asyncio.run(main(seconds, filename))
