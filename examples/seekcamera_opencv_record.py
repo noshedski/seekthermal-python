@@ -291,6 +291,11 @@ async def main(time, fname):
         #cv2.destroyWindow(window_name)
 
 
+async def inner():
+    asyncio.ensure_future(altitude.run(seconds, filename))
+    asyncio.ensure_future(main(seconds, filename))
+
+
 if __name__ == "__main__":
     seconds = 60
     filename = 'default_test'
@@ -301,5 +306,4 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
-    asyncio.ensure_future(altitude.run(seconds, filename))
-    asyncio.ensure_future(main(seconds, filename))
+    asyncio.run(inner())
