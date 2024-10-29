@@ -33,6 +33,7 @@ from pathlib import Path
 import subprocess
 import asyncio
 import altitude
+import datetime
 
 from PIL import Image, ImageFont, ImageDraw
 
@@ -156,7 +157,7 @@ def bgra2rgb( bgra ):
 async def main(time, fname):
 
     # Record start time
-    start = time.time()
+    start = datetime.datetime.now().timestamp()
 
     window_name = "Seek Thermal - Python OpenCV Sample"
     
@@ -192,7 +193,7 @@ async def main(time, fname):
         print("Recording started!")
 
         # Record time elapsed since start
-        elapsed = time.time() - start
+        elapsed = datetime.datetime.now().timestamp() - start
         print(f"Elapsed time: {elapsed}")
 
         if command == "r":
