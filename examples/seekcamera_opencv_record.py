@@ -28,6 +28,9 @@ import time as sleep
 import glob
 import random
 from pathlib import Path
+from PIL import Image
+from pathlib import Path
+import subprocess
 
 from PIL import Image, ImageFont, ImageDraw
 
@@ -159,9 +162,7 @@ def main(time, fname):
     ts_last  = 0
     frame_count = 0
     frame_cap = time * 27
-   
-    from PIL import Image
-    from pathlib import Path
+
     for f in glob.glob(fileName + '*.jpg'):
         os.remove(f)
 
@@ -189,7 +190,7 @@ def main(time, fname):
         print("Recording started!")
         #rtflnhfgh start alt
         print(f"calling altitude to be stored in {fname}")
-        os.system(f"python3 altitude.py {time} {fname}")
+        subprocess.Popen(["python3", "altitude.py", str(time), fname])
         if command == "r":
             #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
             renderer.camera.shutter_mode = SeekCameraShutterMode.MANUAL
