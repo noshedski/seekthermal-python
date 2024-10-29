@@ -192,7 +192,7 @@ async def main(time, fname):
         print("Recording started!")
         #rtflnhfgh start alt
         print(f"calling altitude to be stored in {fname}")
-        asyncio.run(altitude.run(time, fname))
+        asyncio.create_task(altitude.run(time, fname))
         if command == "r":
             #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
             renderer.camera.shutter_mode = SeekCameraShutterMode.MANUAL
