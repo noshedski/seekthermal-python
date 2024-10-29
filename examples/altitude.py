@@ -33,7 +33,8 @@ async def run(end=end, file_name=file_name):
 
     await drone.telemetry.set_rate_position(1.0)
 
-    print("Start time is: ", start)
+    time = (datetime.datetime.now() - start).total_seconds()
+    print("Start time is: ", time)
 
     # Get altitude
     async for altitude in drone.telemetry.position():
