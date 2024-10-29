@@ -39,7 +39,7 @@ async def run():
         time = (datetime.datetime.now() - start).total_seconds()
         if time > end:
             print("Finished")
-            exit()
+            sys.exit(0)
         print(f"Altitude: {alt}m | Time: {time}")
         timestamps.append({"time": time, "alt": alt})
         with open(f"timestamps/{file_name}.json", "a") as f:
