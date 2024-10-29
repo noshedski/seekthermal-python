@@ -148,7 +148,7 @@ def bgra2rgb( bgra ):
 
 
 
-def main(time, merge):
+def main(time, fname):
     window_name = "Seek Thermal - Python OpenCV Sample"
     
     fileName = "image"
@@ -188,7 +188,8 @@ def main(time, merge):
             sleep.sleep(1)
         print("Recording started!")
         #rtflnhfgh start alt
-        os.system(f"python altitude.py {time} test")
+        print(f"calling altitude to be stored in {fname}")
+        os.system(f"python altitude.py {time} {fname}")
         if command == "r":
             #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
             renderer.camera.shutter_mode = SeekCameraShutterMode.MANUAL
@@ -252,16 +253,15 @@ def main(time, merge):
                         #height, width, layers = img.shape
                         #size = (width,height)
                         if filename.endswith('.jpg'):
-                            if merge == False:
-                                newfilename = pathname + "/" + filename
-                                #print(newfilename)
-                                Path(os.getcwd() + "/"+ filename).rename(newfilename)
+                            newfilename = pathname + "/" + filename
+                            #print(newfilename)
+                            Path(os.getcwd() + "/"+ filename).rename(newfilename)
 
                             img_array.append(newfilename)
                         
                         #os.remove(filename)                        
                     #out = cv2.VideoWriter('myVideo.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_count/time_s, size)
-                    
+                    merge = False
                     if merge == True:
                         print("Merge activated, merging file to video")
                         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(img_array, fps=27)
@@ -287,14 +287,12 @@ def main(time, merge):
 
 if __name__ == "__main__":
     seconds = 60
-    merge = False
+    filename = 'default_test'
     if len(sys.argv) == 2:
         seconds = int(sys.argv[1])
     elif len(sys.argv) == 3:
-        if str(sys.argv[2]) == 'm':
-            merge = True
-        else:
-            merge = False
-        seconds = int(sys.argv[1])    
+        filename = sys.argv[2]
+        seconds = int(sys.argv[1])
+        print(filename)    
 
-    main(seconds, merge)
+    main(seconds, filename)
