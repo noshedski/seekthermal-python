@@ -36,7 +36,7 @@ async def run():
     # Get altitude
     async for altitude in drone.telemetry.position():
         alt = altitude.relative_altitude_m
-        time = datetime.datetime.now() - start
+        time = (datetime.datetime.now() - start).total_seconds()
         if time > end:
             print("Finished")
             exit()
