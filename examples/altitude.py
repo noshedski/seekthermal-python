@@ -31,6 +31,8 @@ async def run():
             print(f"-- Connected to drone!")
             break
 
+    await drone.telemetry.set_rate_position(1.0)
+
     # Get altitude
     async for altitude in drone.telemetry.position():
         alt = altitude.relative_altitude_m
