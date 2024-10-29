@@ -37,10 +37,11 @@ async def run():
     async for altitude in drone.telemetry.position():
         alt = altitude.relative_altitude_m
         time = datetime.datetime.now() - start
-        if time.total_seconds() > end:
+        if time > end:
+            print("Finished")
             exit()
         print(f"Altitude: {alt}m | Time: {time}")
-        timestamps.append({"time": time.total_seconds(), "alt": alt})
+        timestamps.append({"time": time, "alt": alt})
         with open(f"timestamps/{file_name}.json", "a") as f:
             json.dump(timestamps, f)
     
