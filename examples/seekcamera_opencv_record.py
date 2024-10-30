@@ -34,6 +34,7 @@ import subprocess
 import asyncio
 import altitude
 import datetime
+import threading
 
 from PIL import Image, ImageFont, ImageDraw
 
@@ -154,7 +155,7 @@ def bgra2rgb( bgra ):
 
 
 
-async def main(time, fname):
+def main(time, fname):
 
     # Record start time
     start = datetime.datetime.now().timestamp()
@@ -291,12 +292,15 @@ async def main(time, fname):
         #cv2.destroyWindow(window_name)
 
 
-async def inner():
-    asyncio.ensure_future(altitude.run(seconds, filename))
-    asyncio.ensure_future(main(seconds, filename))
+def inner():
+    altitude_thread = threading.Thread(target=lambda: asyncio.run(altitude.run(seconds, filename)))
+    main_thread = threading.Thread(target=main, args=(seconds, filename))
 
-    while True:
-        await asyncio.sleep(1)
+    altitude_thread.start()
+    main_thread.start()
+
+    altitude_thread.join()
+    main_thread.join()
 
 
 if __name__ == "__main__":
@@ -309,4 +313,4 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
-    asyncio.run(inner())
+    inner()
