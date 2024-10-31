@@ -11,13 +11,11 @@ import asyncio
 import os
 import datetime
 
-start = datetime.datetime.now()
-file_name = "default"
-end = 0
+async def run(end, file_name):
 
-timestamps = []
+    start = datetime.datetime.now()
+    timestamps = []
 
-async def run(end=end, file_name=file_name):
     drone = System()
     print("Initializing system...")
     drone = System(sysid=1)
@@ -59,4 +57,4 @@ if __name__ == "__main__":
     file_name = sys.argv[2]
     print(f"File name: {file_name}")
 
-    asyncio.run(run())
+    asyncio.run(run(end, file_name))
