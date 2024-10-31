@@ -55,6 +55,8 @@ if __name__ == "__main__":
     print("Starting telemetry")
 
     end = int(sys.argv[1])
+    print(f"End time: {end}s")
     file_name = sys.argv[2]
+    print(f"File name: {file_name}")
 
     asyncio.run(run())
