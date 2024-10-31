@@ -41,6 +41,7 @@ async def run(end=end, file_name=file_name):
         alt = altitude.relative_altitude_m
         time = (datetime.datetime.now() - start).total_seconds()
         if time > end:
+            print(f"End time {end}s reached at {time}s")
             print("Finished")
             return
         print(f"Altitude: {alt}m | Time: {time}")
