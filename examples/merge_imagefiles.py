@@ -6,12 +6,11 @@ import shutil
 def main(videoname):
 
     pathname = os.getcwd() + '/frames/'
-    print(pathname)
+    #print(pathname)
     img_array = []
     for filename in sorted(os.listdir(pathname)):
-        
         image_file = pathname + filename
-        print(image_file)
+        #print(image_file)
         img_array.append(image_file)
         
 

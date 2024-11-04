@@ -150,7 +150,7 @@ def main():
                         (height, width, test) = img.shape
                         #print(height)
                         #print(width)
-                        print(test)
+                        #print(test)
                         cv2.resizeWindow(window_name,  width ,  height )
                         renderer.first_frame = False
 

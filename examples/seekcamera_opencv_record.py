@@ -33,6 +33,7 @@ from pathlib import Path
 import subprocess
 import asyncio
 import altitude
+from detect import find_organism
 import datetime
 import threading
 
@@ -182,6 +183,7 @@ def main(time, fname):
     # Create a context structure responsible for managing all connected USB cameras.
     # Cameras with other IO types can be managed by using a bitwise or of the
     # SeekCameraIOType enum cases.
+    window_name = "Seek Thermal - Python OpenCV Sample"
     with SeekCameraManager(SeekCameraIOType.USB) as manager:
         # Start listening for events.
         renderer = Renderer()
@@ -212,11 +214,14 @@ def main(time, fname):
                         img = renderer.frame.data
 
                         # Resize the rendering window.
+                        if_contours = find_organism(img)
                         if renderer.first_frame:
+                            
                             (height, width, _) = img.shape
-                            #cv2.resizeWindow(window_name, width * 2, height * 2)
+                            #cv2.resizeWindow(window_name, width, height)
                             renderer.first_frame = False
 
+                        
                         # Render the image to the window.
                         #cv2.imshow(window_name, img)
 
@@ -228,7 +233,7 @@ def main(time, fname):
                             rgbimg = bgra2rgb(img)
                             frame_count += 1
                             im = Image.fromarray(rgbimg).convert('RGB')
-                            jpgName = Path('.', fileName + str(counter)).with_suffix('.jpg')
+                            jpgName = Path('./frames', fileName + str(counter)).with_suffix('.jpg')
                             im.save(jpgName)
                             counter += 1
                             count += 1
@@ -244,52 +249,21 @@ def main(time, fname):
                        
                     # Stop the recording and squish all the jpeg files together
                     # and generate the .avi file.
-                    record = False
                     renderer.camera.shutter_mode = SeekCameraShutterMode.AUTO
                     
                     #time_s = (ts_last - ts_first)/1000000000                    
                     ImageFile.LOAD_TRUNCATED_IMAGES = True
-                    print("\nRecording stopped!")
+                    if record:
+                        print("\nRecording stopped!")
+                        pathname = os.getcwd() + '/frames'
+                        print(f"Frames saved in {pathname}! To be merged off pi later")
                     #integer = random.randint(1, 100)
-                    pathname = os.getcwd() + '/frames'
-                    img_array = []
-                    #if merge == False:
-                        #os.mkdir(pathname)
-                    for filename in sorted(os.listdir()):
-                        #img = cv2.imread(filename)
-                        #height, width, layers = img.shape
-                        #size = (width,height)
-                        if filename.endswith('.jpg'):
-                            newfilename = pathname + "/" + filename
-                            #print(newfilename)
-                            Path(os.getcwd() + "/"+ filename).rename(newfilename)
-
-                            img_array.append(newfilename)
-                        
-                        #os.remove(filename)                        
-                    #out = cv2.VideoWriter('myVideo.avi', cv2.VideoWriter_fourcc(*'DIVX'), frame_count/time_s, size)
-                    merge = False
-                    if merge == True:
-                        print("Merge activated, merging file to video")
-                        clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(img_array, fps=27)
-                        clip.write_videofile(pathname +".mp4")
-                    else: 
-                        print(f"\nMerge was not turned on, so images are dumped in {pathname} to be merged off pi")
+                    record = False
                     #frame_count = ts_first = ts_last = 0
-                    
-                    #for filename in glob.glob('image*.jpg'):
-                        #os.remove(filename)
-                    #for i in range(len(img_array)):
-                        #out.write(img_array[i])
-                    #out.release()
-                    break
+                    #break
+                
 
-                # Check if the window has been closed manually.
-                #if not cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE):
-                    # print("test")
-                    #break 
-
-        #cv2.destroyWindow(window_name)
+        cv2.destroyWindow(window_name)
 
 
 def inner():
