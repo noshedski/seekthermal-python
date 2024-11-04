@@ -32,6 +32,7 @@ def main(filename):
         if ret == True:
         # Display the resulting frame
             frame_count += 1
+            #if_contours = find_organism(frame)
             if_contours = find_organism(frame, timestamps, frame_count)
             title = f"Detection of organisms in {path}"
             cv2.imshow(title, if_contours)
