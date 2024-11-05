@@ -157,22 +157,9 @@ def bgra2rgb( bgra ):
 from mavsdk import System
 from mavsdk.server_utility import StatusTextType
 
-async def main(time, fname):
+async def main(time, drone, fname):
 
-    # Record start time
-    start = datetime.datetime.now().timestamp()
-
-    print("Initializing system...")
-    drone = System(sysid=1)
-    system_address = os.getenv("MAV_DEV", "udp://:14540")
-    print(f"Connecting to drone on: {system_address}")
-    await drone.connect(system_address=system_address)
-
-    print("Got drone object. Waiting for drone to connect...")
-    async for state in drone.core.connection_state():
-        if state.is_connected:
-            print(f"-- Connected to drone!")
-
+    print("Sending message to drone...")
     await drone.server_utility.send_status_text(StatusTextType.INFO, "Hello world!")
     print("Message sent!")
 
@@ -281,9 +268,22 @@ async def main(time, fname):
         # cv2.destroyWindow(window_name)
 
 
-def inner():
-    altitude_thread = threading.Thread(target=lambda: asyncio.run(altitude.run(seconds, filename)))
-    main_thread = threading.Thread(target=lambda: asyncio.run(main(seconds, filename)))
+async def inner():
+    drone = System()
+    print("Initializing system...")
+    drone = System(sysid=1)
+    system_address = os.getenv("MAV_DEV", "udp://:14540")
+    print(f"Connecting to drone on: {system_address}")
+    await drone.connect(system_address=system_address)
+
+    print("Waiting for drone to connect...")
+    async for state in drone.core.connection_state():
+        if state.is_connected:
+            print(f"-- Connected to drone!")
+            break
+
+    altitude_thread = threading.Thread(target=lambda: asyncio.run(altitude.run(seconds, drone, filename)))
+    main_thread = threading.Thread(target=lambda: asyncio.run(main(seconds, drone, filename)))
 
     altitude_thread.start()
     main_thread.start()
@@ -302,4 +302,4 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
-    inner()
+    asyncio.run(inner())
