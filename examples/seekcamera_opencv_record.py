@@ -263,7 +263,7 @@ def main(time, fname):
                     #break
                 
 
-        cv2.destroyWindow(window_name)
+        # cv2.destroyWindow(window_name)
 
 
 def inner():
