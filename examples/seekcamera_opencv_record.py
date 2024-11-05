@@ -267,8 +267,7 @@ async def main(time, drone, fname):
 
         # cv2.destroyWindow(window_name)
 
-
-async def inner():
+async def initialize_drone():
     drone = System()
     print("Initializing system...")
     drone = System(sysid=1)
@@ -281,6 +280,11 @@ async def inner():
         if state.is_connected:
             print(f"-- Connected to drone!")
             break
+    return drone
+
+def inner():
+    
+    drone = asyncio.run(initialize_drone())
 
     altitude_thread = threading.Thread(target=lambda: asyncio.run(altitude.run(seconds, drone, filename)))
     main_thread = threading.Thread(target=lambda: asyncio.run(main(seconds, drone, filename)))
