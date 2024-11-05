@@ -306,4 +306,4 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
-    asyncio.run(inner())
+    inner()
