@@ -282,12 +282,23 @@ async def initialize_drone():
             break
     return drone
 
-def inner():
-    
-    drone = asyncio.run(initialize_drone())
+async def inner():
+    # Create a single event loop
+    loop = asyncio.get_running_loop()
 
-    altitude_thread = threading.Thread(target=lambda: asyncio.run(altitude.run(seconds, drone, filename)))
-    main_thread = threading.Thread(target=lambda: asyncio.run(main(seconds, drone, filename)))
+    # Initialize the drone only once
+    drone = await initialize_drone()
+
+    # Define the tasks as coroutines
+    async def run_altitude():
+        await altitude.run(seconds, drone, filename)
+
+    async def run_main():
+        await main(seconds, drone, filename)
+
+    # Run the altitude and main tasks on the same loop in separate threads
+    altitude_thread = threading.Thread(target=lambda: asyncio.run_coroutine_threadsafe(run_altitude(), loop))
+    main_thread = threading.Thread(target=lambda: asyncio.run_coroutine_threadsafe(run_main(), loop))
 
     altitude_thread.start()
     main_thread.start()
@@ -306,4 +317,4 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
-    inner()
+    asyncio.run(inner())
