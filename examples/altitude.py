@@ -37,6 +37,9 @@ async def run(end, file_name):
 
     asyncio.ensure_future(altitudes(drone, start, end, file_name))
     asyncio.ensure_future(send_message(drone))
+
+    while True:
+        await asyncio.sleep(1)
     
 async def altitudes(drone, start, end, file_name):
     timestamps = []
