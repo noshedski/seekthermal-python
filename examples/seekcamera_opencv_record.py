@@ -159,11 +159,17 @@ from mavsdk.server_utility import StatusTextType
 import socket
 
 def send_message(message, host='127.0.0.1', port=65432):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((host, port))
-        s.sendall(message.encode())
-        data = s.recv(1024)
-    print('Received', repr(data))
+    while True:
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((host, port))
+                s.sendall(message.encode())
+                data = s.recv(1024)
+            print('Received', repr(data))
+            break
+        except ConnectionRefusedError:
+            print("Connection failed, retrying in 2 seconds...")
+            sleep.sleep(2)
 
 def main(time, fname):
 
