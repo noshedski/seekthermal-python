@@ -156,12 +156,21 @@ def bgra2rgb( bgra ):
 
 from mavsdk import System
 from mavsdk.server_utility import StatusTextType
+import socket
 
-async def main(time, drone, fname):
+def send_message(message, host='127.0.0.1', port=65432):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((host, port))
+        s.sendall(message.encode())
+        data = s.recv(1024)
+    print('Received', repr(data))
 
-    print("Sending message to drone...")
-    await drone.server_utility.send_status_text(StatusTextType.INFO, "Hello world!")
-    print("Message sent!")
+def main(time, fname):
+
+
+    start = datetime.datetime.now().timestamp()
+
+    send_message("Hello, World!")
 
     window_name = "Seek Thermal - Python OpenCV Sample"
     
@@ -267,31 +276,26 @@ async def main(time, drone, fname):
 
         # cv2.destroyWindow(window_name)
 
-async def initialize_drone():
-    drone = System()
-    print("Initializing system...")
-    drone = System(sysid=1)
-    system_address = os.getenv("MAV_DEV", "udp://:14540")
-    print(f"Connecting to drone on: {system_address}")
-    await drone.connect(system_address=system_address)
+# async def initialize_drone():
+#     drone = System()
+#     print("Initializing system...")
+#     drone = System(sysid=1)
+#     system_address = os.getenv("MAV_DEV", "udp://:14540")
+#     print(f"Connecting to drone on: {system_address}")
+#     await drone.connect(system_address=system_address)
 
-    print("Waiting for drone to connect...")
-    async for state in drone.core.connection_state():
-        if state.is_connected:
-            print(f"-- Connected to drone!")
-            break
-    return drone
+#     print("Waiting for drone to connect...")
+#     async for state in drone.core.connection_state():
+#         if state.is_connected:
+#             print(f"-- Connected to drone!")
+#             break
+#     return drone
 
 async def inner():
-    # Create a single event loop
-    loop = asyncio.get_running_loop()
-
-    # Initialize the drone only once
-    drone = await initialize_drone()
 
     # Run the altitude and main tasks on the same loop in separate threads
-    altitude_thread = threading.Thread(target=lambda: asyncio.run_coroutine_threadsafe(altitude.run(seconds, drone, filename), loop))
-    main_thread = threading.Thread(target=lambda: asyncio.run_coroutine_threadsafe(main(seconds, drone, filename), loop))
+    altitude_thread = threading.Thread(target=lambda: asyncio.run(altitude.run(seconds, filename)))
+    main_thread = threading.Thread(main, args=(seconds, filename))
 
     altitude_thread.start()
     main_thread.start()
@@ -310,4 +314,4 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
-    asyncio.run(inner())
+    inner()
