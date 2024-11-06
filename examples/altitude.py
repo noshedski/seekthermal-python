@@ -35,8 +35,8 @@ async def run(end, file_name):
     time = (datetime.datetime.now() - start).total_seconds()
     print("Start time is: ", time)
 
+    # asyncio.ensure_future(send_message(drone))
     asyncio.ensure_future(altitudes(drone, start, end, file_name))
-    asyncio.ensure_future(send_message(drone))
 
     while True:
         await asyncio.sleep(1)
