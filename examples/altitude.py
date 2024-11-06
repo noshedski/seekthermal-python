@@ -16,8 +16,7 @@ import socket
 async def run(end, file_name):
 
     start = datetime.datetime.now()
-
-    drone = System()
+    drone = System(sysid=1)
     print("Initializing system...")
     system_address = os.getenv("MAV_DEV", "udp://:14540")
     print(f"Connecting to drone on: {system_address}")
