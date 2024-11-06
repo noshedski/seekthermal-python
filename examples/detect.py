@@ -85,6 +85,13 @@ def find_organism(arr, time_json = None, nframes = None):
                     break
                 else:
                     break
+    elif time_json != None and nframes == None:
+        # Use the latest timestamp
+        timestamp = time_json[-1]
+        if timestamp['alt'] >= 5:
+            detect = True
+        else:
+            detect = False
     elif time_json == None and nframes == None:
         detect = True
     #print(detect)

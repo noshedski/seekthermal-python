@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 from threading import Condition
 
 import sys
@@ -175,6 +176,7 @@ def main(time, fname):
 
     start = datetime.datetime.now().timestamp()
     last_update = start
+    timestamps = []
 
     send_message("Hello, World!")
 
@@ -231,7 +233,12 @@ def main(time, fname):
                         img = renderer.frame.data
 
                         # Resize the rendering window.
-                        if_contours, rFrame = find_organism(img)
+                        with open(f'timestamps/{fname}.json', 'r') as f:
+                            timestamps = json.load(f)
+
+                        
+
+                        if_contours, rFrame = find_organism(img, timestamps)
                         if if_contours:
                             current_time = datetime.datetime.now().timestamp()
                             elapsed = current_time - start
