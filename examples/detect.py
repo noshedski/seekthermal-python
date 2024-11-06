@@ -58,7 +58,7 @@ def find_organism(arr, time_json = None, nframes = None):
     _, thresholded = cv2.threshold(blurred, 128, 255, cv2.THRESH_BINARY)    
 
     # Find contours in the thresholded image, the contours that are found are potential organisms
-    contours, _ = cv2.findContours(thresholded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(thresholded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
     
     detect = False
     altitude = -1 
