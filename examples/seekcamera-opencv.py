@@ -144,7 +144,7 @@ def main():
                     img = renderer.frame.data
                     #print(renderer.frame.format)
 
-                    if_contours = find_organism(img)
+                    detect, if_contours = find_organism(img)
                     # Resize the rendering window.
                     if renderer.first_frame:
                         (height, width, test) = img.shape

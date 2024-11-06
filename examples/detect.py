@@ -111,14 +111,14 @@ def find_organism(arr, time_json = None, nframes = None):
             print("Organism Detected!")
             for i in range(len(info_array)):
                 print(" Organism " + str(i + 1) + ": " + info_array[i][0] + ", coord: " + str(info_array[i][1][0]) + ", " + str(info_array[i][1][1]) + ".") 
-            return result
+            return (True, result)
         else:
             #print("No organism detected!")
-            return image
+            return (False, image)
         #Tell console organism detected
         
         
         #cv2.destroyAllWindows()
         
     #print("No organism detected!")
-    return image
+    return (False, image)

@@ -36,9 +36,9 @@ def main(filename, json_compatible):
             frame_count += 1
             #if_contours = find_organism(frame)
             if json_compatible:
-                if_contours = find_organism(frame, timestamps, frame_count)
+                _, if_contours = find_organism(frame, timestamps, frame_count)
             else:
-                if_contours = find_organism(frame)
+                _, if_contours = find_organism(frame)
             title = f"Detection of organisms in {path}"
             cv2.imshow(title, if_contours)
             
