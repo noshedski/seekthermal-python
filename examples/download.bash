@@ -44,4 +44,4 @@ open videos/$1.mp4
 
 # Open detect script
 echo "Opening detect script"
-/usr/bin/env python3 detect_mp4.py $1
+/usr/bin/env python3 detect_mp4.py $1 detect
