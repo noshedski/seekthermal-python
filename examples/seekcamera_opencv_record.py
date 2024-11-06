@@ -232,6 +232,8 @@ def main(time, fname):
 
                         # Resize the rendering window.
                         if_contours = find_organism(img)
+                        if (if_contours is not None):
+                            send_message("Organism detected!")
                         if renderer.first_frame:
                             
                             (height, width, _) = img.shape
