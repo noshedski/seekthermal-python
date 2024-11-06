@@ -233,11 +233,14 @@ def main(time, fname):
                         img = renderer.frame.data
 
                         # Resize the rendering window.
-                        with open(f'timestamps/{fname}.json', 'r') as f:
-                            timestamps = json.load(f)
-
-                        
-
+                        old_stamps = timestamps.copy()
+                        try:
+                            with open(f'timestamps/{fname}.json', 'r') as f:
+                                timestamps = json.load(f)
+                        except:
+                            print("Could not read timestamps for frame")
+                            timestamps = old_stamps
+        
                         if_contours, rFrame = find_organism(img, timestamps)
                         if if_contours:
                             current_time = datetime.datetime.now().timestamp()
