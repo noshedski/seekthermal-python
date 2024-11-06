@@ -64,6 +64,8 @@ async def altitudes(drone, start, end, file_name):
 async def send_message(drone):
     # Define the server address and port
     server_address = ('localhost', 65432)
+
+    await drone.server_utility.send_status_text(StatusTextType.INFO, "Hello world!")
     
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
