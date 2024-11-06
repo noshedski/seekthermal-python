@@ -31,6 +31,9 @@ async def run(end, file_name):
 
     await drone.telemetry.set_rate_position(1.0)
 
+    print("Sending status text...")
+    await drone.server_utility.send_status_text(StatusTextType.INFO, "Hello world!")
+
     time = (datetime.datetime.now() - start).total_seconds()
     print("Start time is: ", time)
 
