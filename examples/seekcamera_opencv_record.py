@@ -173,8 +173,8 @@ def send_message(message, host='127.0.0.1', port=65432):
 
 def main(time, fname):
 
-
     start = datetime.datetime.now().timestamp()
+    last_update = start
 
     send_message("Hello, World!")
 
@@ -233,7 +233,11 @@ def main(time, fname):
                         # Resize the rendering window.
                         if_contours = find_organism(img)
                         if (if_contours is not None):
-                            send_message("Organism detected!")
+                            current_time = datetime.datetime.now().timestamp()
+                            elapsed = current_time - start
+                            if (elapsed > 1):
+                                send_message("Organism detected!")
+                                start = current_time
                         if renderer.first_frame:
                             
                             (height, width, _) = img.shape
