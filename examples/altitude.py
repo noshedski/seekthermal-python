@@ -87,8 +87,11 @@ async def handle_client(connection, drone):
                 break
             print(f"Received message: {data.decode('utf-8')}")
             # Send to MAVSDK
-            result = await drone.server_utility.send_status_text(StatusTextType.INFO, data.decode('utf-8'))
-            print(f"Sent message: {data.decode('utf-8')}, Return value: {result}")
+            try:
+                await drone.server_utility.send_status_text(StatusTextType.INFO, "Hello world!")
+                print(f"Sent message: {data.decode('utf-8')}")
+            except Exception as e:
+                print(f"Error sending message: {e}")
 
             await asyncio.get_event_loop().sock_sendall(connection, data)
 
