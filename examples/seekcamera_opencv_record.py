@@ -291,7 +291,7 @@ def main(time, fname):
 #             break
 #     return drone
 
-async def inner():
+def inner():
 
     # Run the altitude and main tasks on the same loop in separate threads
     altitude_thread = threading.Thread(target=lambda: asyncio.run(altitude.run(seconds, filename)))
