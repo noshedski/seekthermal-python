@@ -2,6 +2,7 @@ import moviepy.video.io.ImageSequenceClip
 import sys
 import os
 import shutil
+import cv2
 
 def main(videoname):
 
@@ -11,7 +12,10 @@ def main(videoname):
     for filename in sorted(os.listdir(pathname)):
         image_file = pathname + filename
         #print(image_file)
-        img_array.append(image_file)
+        if cv2.imread(image_file) is None:
+            break
+        else:
+            img_array.append(image_file)
         
 
     destination = os.getcwd() + '/videos/' + videoname

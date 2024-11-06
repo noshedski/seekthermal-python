@@ -6,10 +6,9 @@ import sys
 import json
 
 # Create a VideoCapture object and read from input file
-def main(filename):
+def main(filename, json_compatible):
     path = os.getcwd() + "/videos/" + filename + ".mp4"
-    json_path = os.getcwd() + "/timestamps/" + filename + ".json"
-    print(json_path)
+    
     #print(path)
     cap = cv2.VideoCapture(path)
     end = False
@@ -18,8 +17,11 @@ def main(filename):
         print("Error opening video file")
 
     # Open and read the JSON file
-    with open(json_path, 'r') as file:
-        timestamps = json.load(file)
+    if json_compatible:
+        json_path = os.getcwd() + "/timestamps/" + filename + ".json"
+        print(json_path)
+        with open(json_path, 'r') as file:
+            timestamps = json.load(file)
     # Print the data
     #print(timestamps)
 
@@ -33,7 +35,10 @@ def main(filename):
         # Display the resulting frame
             frame_count += 1
             #if_contours = find_organism(frame)
-            if_contours = find_organism(frame, timestamps, frame_count)
+            if json_compatible:
+                if_contours = find_organism(frame, timestamps, frame_count)
+            else:
+                if_contours = find_organism(frame)
             title = f"Detection of organisms in {path}"
             cv2.imshow(title, if_contours)
             
@@ -61,5 +66,8 @@ def main(filename):
 
 if __name__ in "__main__":
     fname = sys.argv[1]
+    if_json = False
+    if len(sys.argv) >= 3:
+        if_json = True
     #print(fname)
-    main(filename=fname)
+    main(filename=fname, json_compatible=if_json)
