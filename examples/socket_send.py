@@ -8,4 +8,4 @@ def send_message(message, host='127.0.0.1', port=65432):
     print('Received', repr(data))
 
 if __name__ == "__main__":
-    send_message("Hello, World!")
+    send_message("New World")

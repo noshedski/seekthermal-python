@@ -30,9 +30,6 @@ async def run(end, file_name):
 
     await drone.telemetry.set_rate_position(1.0)
 
-    print("Sending status text...")
-    await drone.server_utility.send_status_text(StatusTextType.INFO, "Hello world!")
-
     time = (datetime.datetime.now() - start).total_seconds()
     print("Start time is: ", time)
 
@@ -66,8 +63,6 @@ async def altitudes(drone, start, end, file_name):
 async def send_message(drone):
     # Define the server address and port
     server_address = ('localhost', 65432)
-
-    await drone.server_utility.send_status_text(StatusTextType.INFO, "Hello world!")
     
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -92,7 +87,7 @@ async def handle_client(connection, drone):
             print(f"Received message: {data.decode('utf-8')}")
             # Send to MAVSDK
             try:
-                await drone.server_utility.send_status_text(StatusTextType.INFO, "Hello world!")
+                await drone.server_utility.send_status_text(StatusTextType.INFO, data.decode('utf-8'))
                 print(f"Sent message: {data.decode('utf-8')}")
             except Exception as e:
                 print(f"Error sending message: {e}")
