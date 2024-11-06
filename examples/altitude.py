@@ -19,7 +19,6 @@ async def run(end, file_name):
 
     drone = System()
     print("Initializing system...")
-    drone = System(sysid=1)
     system_address = os.getenv("MAV_DEV", "udp://:14540")
     print(f"Connecting to drone on: {system_address}")
     await drone.connect(system_address=system_address)
@@ -67,29 +66,31 @@ async def send_message(drone):
     server_address = ('localhost', 65432)
     
     # Create a TCP/IP socket
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        # Bind the socket to the address and port
-        sock.bind(server_address)
-        
-        # Listen for incoming connections
-        sock.listen(1)
-        print(f"Listening on {server_address}")
-        
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.bind(server_address)
+    sock.listen(1)
+    sock.setblocking(False)
+    print(f"Listening on {server_address}")
+    
+    loop = asyncio.get_event_loop()
+    while True:
+        connection, client_address = await loop.sock_accept(sock)
+        print(f"Connected by {client_address}")
+        loop.create_task(handle_client(connection, drone))
+
+async def handle_client(connection, drone):
+    with connection:
         while True:
-            # Wait for a connection
-            connection, client_address = sock.accept()
-            with connection:
-                print(f"Connected by {client_address}")
-                while True:
-                    data = connection.recv(1024)
-                    if not data:
-                        break
-                    print(f"Received message: {data.decode('utf-8')}")
+            data = await asyncio.get_event_loop().sock_recv(connection, 1024)
+            if not data:
+                break
+            print(f"Received message: {data.decode('utf-8')}")
 
-                    # Send to MAVSDK
-                    await drone.server_utility.send_status_text(StatusTextType.INFO, data.decode('utf-8'))
+            # Send to MAVSDK
+            await drone.server_utility.send_status_text(StatusTextType.INFO, data.decode('utf-8'))
 
-                    connection.sendall(data)
+            await asyncio.get_event_loop().sock_sendall(connection, data)
 
 if __name__ == "__main__":
     # Start the main function
