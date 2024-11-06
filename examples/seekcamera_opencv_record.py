@@ -293,9 +293,11 @@ def main(time, fname):
 
 def inner():
 
+    print("Starting treads...")
+
     # Run the altitude and main tasks on the same loop in separate threads
     altitude_thread = threading.Thread(target=lambda: asyncio.run(altitude.run(seconds, filename)))
-    main_thread = threading.Thread(main, args=(seconds, filename))
+    main_thread = threading.Thread(target=main, args=(seconds, filename))
 
     altitude_thread.start()
     main_thread.start()
