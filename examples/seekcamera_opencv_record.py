@@ -279,7 +279,7 @@ def main(time, fname):
                     #integer = random.randint(1, 100)
                     record = False
                     #frame_count = ts_first = ts_last = 0
-                    #break
+                    break
                 
 
         # cv2.destroyWindow(window_name)
