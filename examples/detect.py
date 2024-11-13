@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 
 
+
 def get_quad(arr):
     #print("CONTOUR START")
     #print(arr)
@@ -55,7 +56,7 @@ def find_organism(arr, time_json = None, nframes = None):
     blurred = cv2.GaussianBlur(image, (5, 5), 0)
     
     #Apply thresholding to identify potential organisms
-    _, thresholded = cv2.threshold(blurred, 128, 255, cv2.THRESH_BINARY)    
+    _, thresholded = cv2.threshold(blurred, 130, 255, cv2.THRESH_BINARY)    
 
     # Find contours in the thresholded image, the contours that are found are potential organisms
     contours, _ = cv2.findContours(thresholded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
@@ -107,7 +108,12 @@ def find_organism(arr, time_json = None, nframes = None):
             if len(contours[i]) in range(14, 50):
                 test = contours[i]
                 #print(test)
-                temp = get_quad(test)
+                area = cv2.contourArea(test)
+                if area >= 200:
+                    print(area)
+                    temp = get_quad(test)
+                else:
+                    temp =['Q0', [1,1]]
                 #print(temp[1][0])
                 if temp[1][0] in range(75,281) and temp[1][1] in range(50, 200): # Noise blocker
                     info_array.append(temp)
