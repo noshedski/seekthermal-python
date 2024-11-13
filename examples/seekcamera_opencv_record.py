@@ -173,7 +173,6 @@ def send_message(message, host='127.0.0.1', port=65432):
             sleep.sleep(2)
 
 def main(time, fname):
-
     window_name = "Seek Thermal - Python OpenCV Sample"
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
 
@@ -242,6 +241,7 @@ def main(time, fname):
                             timestamps = old_stamps
         
                         if_contours, rFrame = find_organism(img, timestamps)
+                        #if_contours = False
                         if if_contours:
                             current_time = datetime.datetime.now().timestamp()
                             elapsed = current_time - start
@@ -254,7 +254,6 @@ def main(time, fname):
                             cv2.resizeWindow(window_name, width, height)
                             renderer.first_frame = False
 
-                        
                         # Render the image to the window.
                         cv2.imshow(window_name, img)
 
@@ -276,7 +275,7 @@ def main(time, fname):
                                 if ts_first == 0:
                                     ts_first = renderer.frame.header.timestamp_utc_ns                        
                 # Process key events.
-                #key = wait_for_input(1)
+                key = cv2.waitKey(1)
 
                 if count == frame_cap :
                        
@@ -338,4 +337,5 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
+    #main(seconds, filename)
     inner()

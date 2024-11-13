@@ -145,6 +145,7 @@ def bgra2rgb(bgra):
 def main():
     window_name = "Seek Thermal - Python OpenCV Sample"
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+    
     fileName = "image"
     counter = 100000
     capture = False
