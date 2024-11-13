@@ -174,13 +174,14 @@ def send_message(message, host='127.0.0.1', port=65432):
 
 def main(time, fname):
 
+    window_name = "Seek Thermal - Python OpenCV Sample"
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+
     start = datetime.datetime.now().timestamp()
     last_update = start
     timestamps = []
 
     send_message("Hello, World!")
-
-    window_name = "Seek Thermal - Python OpenCV Sample"
     
     fileName = "image"
     counter  = 100000
@@ -202,7 +203,6 @@ def main(time, fname):
     # Create a context structure responsible for managing all connected USB cameras.
     # Cameras with other IO types can be managed by using a bitwise or of the
     # SeekCameraIOType enum cases.
-    window_name = "Seek Thermal - Python OpenCV Sample"
     with SeekCameraManager(SeekCameraIOType.USB) as manager:
         # Start listening for events.
         renderer = Renderer()
@@ -251,12 +251,12 @@ def main(time, fname):
                         if renderer.first_frame:
                             
                             (height, width, _) = img.shape
-                            #cv2.resizeWindow(window_name, width, height)
+                            cv2.resizeWindow(window_name, width, height)
                             renderer.first_frame = False
 
                         
                         # Render the image to the window.
-                        #cv2.imshow(window_name, img)
+                        cv2.imshow(window_name, img)
 
                         # if capture or recording, convert the frame image
                         # to RGB and generate the file.
@@ -296,7 +296,7 @@ def main(time, fname):
                     break
                 
 
-        # cv2.destroyWindow(window_name)
+        cv2.destroyWindow(window_name)
 
 # async def initialize_drone():
 #     drone = System()
