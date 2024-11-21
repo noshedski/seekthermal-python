@@ -33,7 +33,7 @@ from PIL import Image
 from pathlib import Path
 import subprocess
 import asyncio
-#import altitude
+import altitude
 from detect import find_organism
 import datetime
 import threading
@@ -155,8 +155,8 @@ def bgra2rgb( bgra ):
 
     return rgb
 
-#from mavsdk import System
-#from mavsdk.server_utility import StatusTextType
+from mavsdk import System
+from mavsdk.server_utility import StatusTextType
 import socket
 
 def send_message(message, host='127.0.0.1', port=65432):
@@ -180,7 +180,7 @@ def main(time, fname):
     last_update = start
     timestamps = []
 
-    #send_message("Hello, World!")
+    send_message("Hello, World!")
     
     fileName = "image"
     counter  = 100000
@@ -246,7 +246,7 @@ def main(time, fname):
                             current_time = datetime.datetime.now().timestamp()
                             elapsed = current_time - start
                             if (elapsed > 1):
-                                #send_message("Organism detected!")
+                                send_message("Organism detected!")
                                 start = current_time
                         if renderer.first_frame:
                             
@@ -337,5 +337,5 @@ if __name__ == "__main__":
         seconds = int(sys.argv[1])
         print(filename)    
 
-    main(seconds, filename)
-    #inner()
+    #main(seconds, filename)
+    inner()

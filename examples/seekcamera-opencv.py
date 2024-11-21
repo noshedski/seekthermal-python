@@ -125,7 +125,7 @@ def on_event(camera, event_type, event_status, renderer):
 
 def main():
     window_name = "Seek Thermal - Python OpenCV Sample"
-    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+    cv2.namedWindow(window_name, cv2.WINDOW_FULLSCREEN)
 
     # Create a context structure responsible for managing all connected USB cameras.
     # Cameras with other IO types can be managed by using a bitwise or of the
@@ -151,7 +151,7 @@ def main():
                         #print(height)
                         #print(width)
                         #print(test)
-                        cv2.resizeWindow(window_name,  width ,  height )
+                        #cv2.resizeWindow(window_name,  width ,  height )
                         renderer.first_frame = False
 
                     # Render the image to the window.
