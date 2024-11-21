@@ -18,6 +18,10 @@
 from threading import Condition
 
 from detect import find_organism
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+print(sys.path)
 
 import cv2
 
