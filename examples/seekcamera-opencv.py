@@ -155,7 +155,7 @@ def main():
                         #print(height)
                         #print(width)
                         #print(test)
-                        cv2.resizeWindow(window_name, 640, 440)
+                        cv2.resizeWindow(window_name, 640, 480)
                         renderer.first_frame = False
 
                     # Render the image to the window.
